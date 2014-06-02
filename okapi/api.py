@@ -8,6 +8,7 @@ This module implements the Requests API while storing valuable information into 
 import requests
 import pymongo
 import mongo
+import time
 
 from mongo import * 
 from pymongo import MongoClient 
@@ -52,7 +53,7 @@ def request(method, url, project_name, **kwargs):
 			'request_method':method
 	}
 
-	datas = db.data
+	datas = db.datas
 	data_id = datas.insert(data)
 
 	return res
@@ -73,7 +74,7 @@ def get(url, project_name,  **kwargs):
 		   	'request_method':'GET'
 	}
 
-	datas = db.data
+	datas = db.datas
 	data_id = datas.insert(data)
 
 	return res
@@ -94,7 +95,7 @@ def delete(url, project_name, **kwargs):
 		   	'request_method':'DELETE'
 	}
 
-	datas = db.data
+	datas = db.datas
 	data_id = datas.insert(data)
 
 	return res
@@ -115,7 +116,7 @@ def post(url, project_name, **kwargs):
 		   	'request_method':'POST'
 	}
 
-	datas = db.data
+	datas = db.datas
 	data_id = datas.insert(data)
 
 	return res
@@ -137,7 +138,7 @@ def put(url, project_name, **kwargs):
 		   	'request_method':'PUT'
 	}
 
-	datas = db.data
+	datas = db.datas
 	data_id = datas.insert(data)
 
 	return res
