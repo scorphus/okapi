@@ -20,12 +20,11 @@ TODO:
 	Have a base schema in place. Could definitely add/remove as neccessary
 """
 
-# database connection
-# already created in this case or can create one like following line
-#client = create_client('localhost',27017)
+"""
+TODO:
+	Add condition to either delete data after certain amount of entries in mongodb
+"""
 
-# database name 
-db = client.okapi
 
 """
 TODO:
@@ -37,108 +36,125 @@ TODO:
 	I have used time.clock for now
 """
 
-# calls requests of request library while storing info about api call into mongo db
-def request(method, url, project_name, **kwargs):
-
-	start = time.clock()
-	res = requests.request(method, url, **kwargs)
-	end = time.clock()
-
-	collection = db.project_name
+class api:
 	
-	data = {'time':(end-start),
-			'project_name':project_name,
-			'status_code':res.status_code,
-			'url':res.url,
-			'request_method':method
-	}
+	# initialization of class api
+	def __init__(self, project_name, host, port):
+		self.host = host
+		self.port = port
+		self.project_name = project_name
 
-	datas = db.datas
-	data_id = datas.insert(data)
+	# calls requests of request library while storing info about api call into mongo db
+	def request(self, method, url, **kwargs):
 
-	return res
+		start = time.clock()
+		res = requests.request(method, url, **kwargs)
+		end = time.clock()
 
-# calls get method of request library while storing info about api call into mongo db
-def get(url, project_name,  **kwargs):
+		client = MongoClient(self.host,self.port)	
+		db = client.okapi
+		collection = db.project_name
 
-	start = time.clock()
-	res = requests.get(url, **kwargs)
-	end = time.clock()
+		data = {'time':(end-start),
+				'project_name':self.project_name,
+				'status_code':res.status_code,
+				'url':res.url,
+				'request_method':method
+		}
 
-	collection = db.project_name
+		datas = db.datas
+		data_id = datas.insert(data)
 
-	data = {'time':(end-start),
-		   	'project_name':project_name,
-		   	'status_code':res.status_code,
-		   	'url':res.url,
-		   	'request_method':'GET'
-	}
+		return res
 
-	datas = db.datas
-	data_id = datas.insert(data)
+	# calls get method of request library while storing info about api call into mongo db
+	def get(self, url, **kwargs):
 
-	return res
+		start = time.clock()
+		res = requests.get(url, **kwargs)
+		end = time.clock()
 
-# calls delete method of request library while storing info about api call into mongo db
-def delete(url, project_name, **kwargs):
+		client = MongoClient(self.host,self.port)	
+		db = client.okapi
+		collection = db.project_name
 
-	start = time.clock()
-	res = requests.delete(url, **kwargs)
-	end = time.clock()
+		data = {'time':(end-start),
+			   	'project_name':self.project_name,
+			   	'status_code':res.status_code,
+			   	'url':res.url,
+			   	'request_method':'GET'
+		}
 
-	collection = db.project_name
+		datas = db.datas
+		data_id = datas.insert(data)
 
-	data = {'time':(end-start),
-		   	'project_name':project_name,
-		   	'status_code':res.status_code,
-		   	'url':res.url,
-		   	'request_method':'DELETE'
-	}
+		return res
 
-	datas = db.datas
-	data_id = datas.insert(data)
+	# calls delete method of request library while storing info about api call into mongo db
+	def delete(self, url, **kwargs):
 
-	return res
+		start = time.clock()
+		res = requests.delete(url, **kwargs)
+		end = time.clock()
 
-# calls post method of request library while storing info about api call into mongo db
-def post(url, project_name, **kwargs):
+		client = MongoClient(self.host,self.port)	
+		db = client.okapi
+		collection = db.project_name
 
-	start = time.clock()
-	res = requests.post(url, **kwargs)
-	end = time.clock()
+		data = {'time':(end-start),
+			   	'project_name':self.project_name,
+			   	'status_code':res.status_code,
+			   	'url':res.url,
+			   	'request_method':'DELETE'
+		}
 
-	collection = db.project_name
+		datas = db.datas
+		data_id = datas.insert(data)
 
-	data = {'time':(end-start),
-		   	'project_name':project_name,
-		   	'status_code':res.status_code,
-		   	'url':res.url,
-		   	'request_method':'POST'
-	}
+		return res
 
-	datas = db.datas
-	data_id = datas.insert(data)
+	# calls post method of request library while storing info about api call into mongo db
+	def post(self, url, **kwargs):
 
-	return res
+		start = time.clock()
+		res = requests.post(url, **kwargs)
+		end = time.clock()
 
-# calls put method of request library while storing info about api call into mongo db
-def put(url, project_name, **kwargs):
+		client = MongoClient(self.host,self.port)	
+		db = client.okapi
+		collection = db.project_name
 
-	start = time.clock()
-	res = requests.put(url, **kwargs)
-	end = time.clock()
+		data = {'time':(end-start),
+			   	'project_name':self.project_name,
+			   	'status_code':res.status_code,
+			   	'url':res.url,
+			   	'request_method':'POST'
+		}
 
-	db = okapi
-	collection = db.project_name
+		datas = db.datas
+		data_id = datas.insert(data)
 
-	data = {'time':(end-start),
-		   	'project_name':project_name,
-		   	'status_code':res.status_code,
-		   	'url':res.url,
-		   	'request_method':'PUT'
-	}
+		return res
 
-	datas = db.datas
-	data_id = datas.insert(data)
+	# calls put method of request library while storing info about api call into mongo db
+	def put(self, url, **kwargs):
 
-	return res
+		start = time.clock()
+		res = requests.put(url, **kwargs)
+		end = time.clock()
+
+		client = MongoClient(self.host,self.port)	
+		db = client.okapi
+		collection = db.project_name
+
+		data = {'time':(end-start),
+			   	'project_name':self.project_name,
+			   	'status_code':res.status_code,
+			   	'url':res.url,
+			   	'request_method':'PUT'
+		}
+
+		datas = db.datas
+		data_id = datas.insert(data)
+
+		return res
