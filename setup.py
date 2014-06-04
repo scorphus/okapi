@@ -6,7 +6,7 @@ from setuptools import setup
 
 setup(
     name='okapi',
-    version='0.2',
+    version='0.3',
     author='RedBeacon',
     author_email='support@redbeacon.com',
     description='Python Library to send API info to Storage Server',

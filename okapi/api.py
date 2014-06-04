@@ -14,19 +14,6 @@ from mongo import *
 from pymongo import MongoClient 
 
 """
-TODO:	
-	Make sure to discuss the schema.
-	Make neccessary adjustments to make best schema
-	Have a base schema in place. Could definitely add/remove as neccessary
-"""
-
-"""
-TODO:
-	Add condition to either delete data after certain amount of entries in mongodb
-"""
-
-
-"""
 TODO:
 	Depends on how we want to calculate the time to
 	receieve the request form Home Depots API.
@@ -51,6 +38,11 @@ class api:
 		res = requests.request(method, url, **kwargs)
 		end = time.clock()
 
+		content = ''
+
+		if not res.ok:
+			content = res.content
+		
 		client = MongoClient(self.host,self.port)	
 		db = client.okapi
 		collection = db.project_name
@@ -59,7 +51,8 @@ class api:
 				'project_name':self.project_name,
 				'status_code':res.status_code,
 				'url':res.url,
-				'request_method':method
+				'request_method':method,
+				'content':content
 		}
 
 		datas = db.datas
@@ -74,6 +67,11 @@ class api:
 		res = requests.get(url, **kwargs)
 		end = time.clock()
 
+		content = ''
+
+		if not res.ok:
+			content = res.content
+
 		client = MongoClient(self.host,self.port)	
 		db = client.okapi
 		collection = db.project_name
@@ -82,7 +80,8 @@ class api:
 			   	'project_name':self.project_name,
 			   	'status_code':res.status_code,
 			   	'url':res.url,
-			   	'request_method':'GET'
+			   	'request_method':'GET',
+			   	'content':content
 		}
 
 		datas = db.datas
@@ -97,6 +96,11 @@ class api:
 		res = requests.delete(url, **kwargs)
 		end = time.clock()
 
+		content = ''
+
+		if not res.ok:
+			content = res.content
+
 		client = MongoClient(self.host,self.port)	
 		db = client.okapi
 		collection = db.project_name
@@ -105,7 +109,8 @@ class api:
 			   	'project_name':self.project_name,
 			   	'status_code':res.status_code,
 			   	'url':res.url,
-			   	'request_method':'DELETE'
+			   	'request_method':'DELETE',
+			   	'content':content
 		}
 
 		datas = db.datas
@@ -120,6 +125,11 @@ class api:
 		res = requests.post(url, **kwargs)
 		end = time.clock()
 
+		content = ''
+
+		if not res.ok:
+			content = res.content
+
 		client = MongoClient(self.host,self.port)	
 		db = client.okapi
 		collection = db.project_name
@@ -128,7 +138,8 @@ class api:
 			   	'project_name':self.project_name,
 			   	'status_code':res.status_code,
 			   	'url':res.url,
-			   	'request_method':'POST'
+			   	'request_method':'POST',
+			   	'content':content
 		}
 
 		datas = db.datas
@@ -143,6 +154,11 @@ class api:
 		res = requests.put(url, **kwargs)
 		end = time.clock()
 
+		content = ''
+
+		if not res.ok:
+			content = res.content
+
 		client = MongoClient(self.host,self.port)	
 		db = client.okapi
 		collection = db.project_name
@@ -151,7 +167,8 @@ class api:
 			   	'project_name':self.project_name,
 			   	'status_code':res.status_code,
 			   	'url':res.url,
-			   	'request_method':'PUT'
+			   	'request_method':'PUT',
+			   	'content':content
 		}
 
 		datas = db.datas
