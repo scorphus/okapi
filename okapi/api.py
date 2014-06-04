@@ -9,6 +9,7 @@ import requests
 import pymongo
 import mongo
 import time
+import urlparse 
 
 from mongo import * 
 from pymongo import MongoClient 
@@ -43,6 +44,8 @@ class api:
 		if not res.ok:
 			content = res.content
 		
+		host = urlparse.urlparse(res.url)
+
 		client = MongoClient(self.host,self.port)	
 		db = client.okapi
 		collection = db.project_name
@@ -51,6 +54,7 @@ class api:
 				'project_name':self.project_name,
 				'status_code':res.status_code,
 				'url':res.url,
+				'host':host.hostname,
 				'request_method':method,
 				'content':content
 		}
@@ -72,6 +76,8 @@ class api:
 		if not res.ok:
 			content = res.content
 
+		host = urlparse.urlparse(res.url)
+
 		client = MongoClient(self.host,self.port)	
 		db = client.okapi
 		collection = db.project_name
@@ -80,6 +86,7 @@ class api:
 			   	'project_name':self.project_name,
 			   	'status_code':res.status_code,
 			   	'url':res.url,
+			   	'host':host.hostname,
 			   	'request_method':'GET',
 			   	'content':content
 		}
@@ -101,6 +108,8 @@ class api:
 		if not res.ok:
 			content = res.content
 
+		host = urlparse.urlparse(res.url)
+
 		client = MongoClient(self.host,self.port)	
 		db = client.okapi
 		collection = db.project_name
@@ -109,6 +118,7 @@ class api:
 			   	'project_name':self.project_name,
 			   	'status_code':res.status_code,
 			   	'url':res.url,
+			   	'host':host.hostname,
 			   	'request_method':'DELETE',
 			   	'content':content
 		}
@@ -130,6 +140,8 @@ class api:
 		if not res.ok:
 			content = res.content
 
+		host = urlparse.urlparse(res.url)
+
 		client = MongoClient(self.host,self.port)	
 		db = client.okapi
 		collection = db.project_name
@@ -138,6 +150,7 @@ class api:
 			   	'project_name':self.project_name,
 			   	'status_code':res.status_code,
 			   	'url':res.url,
+			   	'host':host.hostname,
 			   	'request_method':'POST',
 			   	'content':content
 		}
@@ -159,6 +172,8 @@ class api:
 		if not res.ok:
 			content = res.content
 
+		host = urlparse.urlparse(res.url)
+
 		client = MongoClient(self.host,self.port)	
 		db = client.okapi
 		collection = db.project_name
@@ -167,6 +182,7 @@ class api:
 			   	'project_name':self.project_name,
 			   	'status_code':res.status_code,
 			   	'url':res.url,
+			   	'host':host.hostname,
 			   	'request_method':'PUT',
 			   	'content':content
 		}
