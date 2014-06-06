@@ -20,8 +20,8 @@ setup(
     ],
     zip_safe=False,
     install_requires = [
-        'pymongo',
         'mongo',
+        'pymongo',
         'requests',
     ],
     entry_points={

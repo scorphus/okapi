@@ -4,37 +4,35 @@ okapi.api
 This module implements the Requests API while storing valuable information into mongodb.  
 """
 
-# necessary libraries and modules for this script
-import requests
-import pymongo
 import mongo
+import pymongo
+import requests
 import time
 import urlparse 
 
-from mongo import * 
 from pymongo import MongoClient 
 
-"""
-TODO:
-	Depends on how we want to calculate the time to
-	receieve the request form Home Depots API.
-	There are several choices. 
-	Time.time, Time.clock, and a class from request called elapsed
-	I have a test file that makes it seem that time.clock is fastest but is it most accurate?!?
-	I have used time.clock for now
-"""
+# TODO:
+# Depends on how we want to calculate the time to
+# receieve the request form Home Depots API.
+# There are several choices. 
+# Time.time, Time.clock, and a class from request called elapsed
+# I have a test file that makes it seem that time.clock is fastest but is it most accurate?!?
+# I have used time.clock for now
 
-class api:
+class Api:
 	
-	# initialization of class api
 	def __init__(self, project_name, host, port):
+		""" initialization of class api"""
 		self.host = host
 		self.port = port
 		self.project_name = project_name
 
-	# calls requests of request library while storing info about api call into mongo db
-	def request(self, method, url, **kwargs):
+		client = MongoClient(self.host, self.port)	
+		self.db = client.okapi
 
+	def request(self, method, url, **kwargs):
+		"""calls a method of request library while storing info about api call into mongo db"""
 		start = time.clock()
 		res = requests.request(method, url, **kwargs)
 		end = time.clock()
@@ -43,151 +41,31 @@ class api:
 
 		if not res.ok:
 			content = res.content
-		
+
 		host = urlparse.urlparse(res.url)
 
-		client = MongoClient(self.host,self.port)	
-		db = client.okapi
-		collection = db.project_name
-
-		data = {'time':(end-start),
-				'project_name':self.project_name,
-				'status_code':res.status_code,
-				'url':res.url,
-				'host':host.hostname,
-				'request_method':method,
-				'content':content
+		data = {'time': (end - start),
+			   	'project_name': self.project_name,
+			   	'status_code': res.status_code,
+			   	'url': res.url,
+			   	'host': host.hostname,
+			   	'method': method,
+			   	'content': content
 		}
 
-		datas = db.datas
+		datas = self.db.datas
 		data_id = datas.insert(data)
 
 		return res
 
-	# calls get method of request library while storing info about api call into mongo db
 	def get(self, url, **kwargs):
+		return self.request('GET', url, **kwargs)
 
-		start = time.clock()
-		res = requests.get(url, **kwargs)
-		end = time.clock()
-
-		content = ''
-
-		if not res.ok:
-			content = res.content
-
-		host = urlparse.urlparse(res.url)
-
-		client = MongoClient(self.host,self.port)	
-		db = client.okapi
-		collection = db.project_name
-
-		data = {'time':(end-start),
-			   	'project_name':self.project_name,
-			   	'status_code':res.status_code,
-			   	'url':res.url,
-			   	'host':host.hostname,
-			   	'request_method':'GET',
-			   	'content':content
-		}
-
-		datas = db.datas
-		data_id = datas.insert(data)
-
-		return res
-
-	# calls delete method of request library while storing info about api call into mongo db
 	def delete(self, url, **kwargs):
+		return self.request('DELETE', url, **kwargs)
 
-		start = time.clock()
-		res = requests.delete(url, **kwargs)
-		end = time.clock()
-
-		content = ''
-
-		if not res.ok:
-			content = res.content
-
-		host = urlparse.urlparse(res.url)
-
-		client = MongoClient(self.host,self.port)	
-		db = client.okapi
-		collection = db.project_name
-
-		data = {'time':(end-start),
-			   	'project_name':self.project_name,
-			   	'status_code':res.status_code,
-			   	'url':res.url,
-			   	'host':host.hostname,
-			   	'request_method':'DELETE',
-			   	'content':content
-		}
-
-		datas = db.datas
-		data_id = datas.insert(data)
-
-		return res
-
-	# calls post method of request library while storing info about api call into mongo db
 	def post(self, url, **kwargs):
+		return self.request('POST', url, **kwargs)
 
-		start = time.clock()
-		res = requests.post(url, **kwargs)
-		end = time.clock()
-
-		content = ''
-
-		if not res.ok:
-			content = res.content
-
-		host = urlparse.urlparse(res.url)
-
-		client = MongoClient(self.host,self.port)	
-		db = client.okapi
-		collection = db.project_name
-
-		data = {'time':(end-start),
-			   	'project_name':self.project_name,
-			   	'status_code':res.status_code,
-			   	'url':res.url,
-			   	'host':host.hostname,
-			   	'request_method':'POST',
-			   	'content':content
-		}
-
-		datas = db.datas
-		data_id = datas.insert(data)
-
-		return res
-
-	# calls put method of request library while storing info about api call into mongo db
 	def put(self, url, **kwargs):
-
-		start = time.clock()
-		res = requests.put(url, **kwargs)
-		end = time.clock()
-
-		content = ''
-
-		if not res.ok:
-			content = res.content
-
-		host = urlparse.urlparse(res.url)
-
-		client = MongoClient(self.host,self.port)	
-		db = client.okapi
-		collection = db.project_name
-
-		data = {'time':(end-start),
-			   	'project_name':self.project_name,
-			   	'status_code':res.status_code,
-			   	'url':res.url,
-			   	'host':host.hostname,
-			   	'request_method':'PUT',
-			   	'content':content
-		}
-
-		datas = db.datas
-		data_id = datas.insert(data)
-
-		return res
+		return self.request('PUT', url, **kwargs)
