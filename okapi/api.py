@@ -4,8 +4,7 @@ okapi.api
 This module implements the Requests API while storing valuable information into mongodb.  
 """
 
-import mongo
-import pymongo
+import datetime
 import requests
 import time
 import urlparse 
@@ -20,7 +19,7 @@ from pymongo import MongoClient
 # I have a test file that makes it seem that time.clock is fastest but is it most accurate?!?
 # I have used time.clock for now
 
-class Api:
+class Api(object):
 	
 	def __init__(self, project_name, host, port):
 		""" initialization of class api"""
@@ -42,15 +41,19 @@ class Api:
 		if not res.ok:
 			content = res.content
 
+		date = datetime.date.today()
+		date_time = datetime.datetime.now().time()
 		host = urlparse.urlparse(res.url)
 
-		data = {'time': (end - start),
-			   	'project_name': self.project_name,
-			   	'status_code': res.status_code,
-			   	'url': res.url,
-			   	'host': host.hostname,
-			   	'method': method,
-			   	'content': content
+		data = {'content': content,
+			'date': date,
+			'date_time': date_time, 
+			'host': host.hostname,
+			'method': method,
+			'project_name': self.project_name,
+			'response_time': (end - start),
+			'status_code': res.status_code,
+			'url': res.url,
 		}
 
 		datas = self.db.datas
