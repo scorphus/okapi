@@ -41,19 +41,17 @@ class Api(object):
 		if not res.ok:
 			content = res.content
 
-		date = datetime.date.today()
-		date_time = datetime.datetime.now().time()
+		date = datetime.date.today().utcnow()
 		host = urlparse.urlparse(res.url)
 
 		data = {'content': content,
-			'date': date,
-			'date_time': date_time, 
-			'host': host.hostname,
-			'method': method,
-			'project_name': self.project_name,
-			'response_time': (end - start),
-			'status_code': res.status_code,
-			'url': res.url,
+				'date': date,
+				'host': host.hostname,
+			   	'method': method,
+			   	'project_name': self.project_name,
+			   	'response_time': (end - start),
+			   	'status_code': res.status_code,
+			   	'url': res.url,
 		}
 
 		datas = self.db.datas
