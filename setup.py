@@ -6,15 +6,22 @@
 #
 # Author: Gobind Ball
 
+import os.path
+
 from setuptools import find_packages
 from setuptools import setup
 
+from okapi import __version__
+
+here = os.path.abspath(os.path.dirname(__file__))
+README = open(os.path.join(here, 'README.rst')).read()
+
 setup(
     name='okapi',
-    version='0.5',
+    version=__version__,
     author='RedBeacon (Gobind Ball)',
     author_email='support@redbeacon.com',
-    description='Python Library to send API info to Storage Server',
+    description=README,
     packages=find_packages(),
     data_files=[('config',['setup.cfg'])],
     classifiers=[
