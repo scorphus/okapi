@@ -63,7 +63,7 @@ class Api(object):
             }
 
             datas = self.db.datas
-            data_id = datas.insert(data)
+            datas.insert(data)
 
             return res
 
