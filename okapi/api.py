@@ -41,7 +41,7 @@ class Api(object):
 		if not res.ok:
 			content = res.content
 
-		date = datetime.date.today().utcnow()
+		date = datetime.datetime.utcnow()
 		host = urlparse.urlparse(res.url)
 
 		data = {'content': content,
