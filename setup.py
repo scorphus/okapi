@@ -15,13 +15,14 @@ from okapi import __version__
 
 here = os.path.abspath(os.path.dirname(__file__))
 README = open(os.path.join(here, 'README.rst')).read()
+CHANGES = open(os.path.join(here, 'CHANGES.rst')).read()
 
 setup(
     name='okapi',
     version=__version__,
     author='RedBeacon (Gobind Ball)',
     author_email='support@redbeacon.com',
-    description=README,
+    description=README + '\n\n' + CHANGES,
     packages=find_packages(),
     data_files=[('config',['setup.cfg'])],
     classifiers=[
