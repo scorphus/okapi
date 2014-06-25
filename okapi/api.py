@@ -9,33 +9,33 @@
 """
 okapi.api
 ~~~~~~~~~
-This module implements the Requests API while storing valuable information into mongodb.  
+This module implements the Requests API while storing valuable information into mongodb.
 """
 
 import datetime
 import requests
 import time
-import urlparse 
+import urlparse
 
-from pymongo import MongoClient 
+from pymongo import MongoClient
 
 # TODO:
 # Depends on how we want to calculate the time to
 # receieve the request form Home Depots API.
-# There are several choices. 
+# There are several choices.
 # Time.time, Time.clock, and a class from request called elapsed
 # I have a test file that makes it seem that time.clock is fastest but is it most accurate?!?
 # I have used time.clock for now
 
 class Api(object):
-	
+
 	def __init__(self, project_name, host, port):
 		""" initialization of class api"""
 		self.host = host
 		self.port = port
 		self.project_name = project_name
 
-		client = MongoClient(self.host, self.port)	
+		client = MongoClient(self.host, self.port)
 		self.db = client.okapi
 
 	def request(self, method, url, **kwargs):
