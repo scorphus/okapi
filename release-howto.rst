@@ -22,7 +22,7 @@ git tag VERSION_STRING
 
 6. Push everything to Github
 
-git push
+git push --tags
 
 7. Create the release on PyPI:
 
