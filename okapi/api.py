@@ -18,6 +18,7 @@ import time
 import urlparse
 
 from pymongo import MongoClient
+from pymongo.errors import ConnectionFailure
 
 # TODO:
 # Depends on how we want to calculate the time to
@@ -35,8 +36,11 @@ class Api(object):
         self.port = port
         self.project_name = project_name
 
-        client = MongoClient(self.host, self.port)
-        self.db = client.okapi
+        try:
+            client = MongoClient(self.host, self.port)
+            self.db = client.okapi
+        except ConnectionFailure:
+            self.db = None
 
     def request(self, method, url, **kwargs):
         """calls a method of request library while storing info about api call into mongo db"""
@@ -44,28 +48,30 @@ class Api(object):
         res = requests.request(method, url, **kwargs)
         end = time.clock()
 
-        content = ''
+        if self.db is not None:
 
-        if not res.ok:
-            content = res.content
+            content = ''
 
-            date = datetime.datetime.utcnow()
-            host = urlparse.urlparse(res.url)
+            if not res.ok:
+                content = res.content
 
-            data = {'content': content,
-                    'date': date,
-                    'host': host.hostname,
-                    'method': method,
-                    'project_name': self.project_name,
-                    'response_time': (end - start),
-                    'status_code': res.status_code,
-                    'url': res.url,
-            }
+                date = datetime.datetime.utcnow()
+                host = urlparse.urlparse(res.url)
 
-            datas = self.db.datas
-            datas.insert(data)
+                data = {'content': content,
+                        'date': date,
+                        'host': host.hostname,
+                        'method': method,
+                        'project_name': self.project_name,
+                        'response_time': (end - start),
+                        'status_code': res.status_code,
+                        'url': res.url,
+                    }
 
-            return res
+                datas = self.db.datas
+                datas.insert(data)
+
+        return res
 
     def get(self, url, **kwargs):
         return self.request('GET', url, **kwargs)
