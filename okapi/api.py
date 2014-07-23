@@ -13,13 +13,15 @@ This module implements the Requests API while storing valuable information into 
 """
 
 import datetime
+import logging
 import requests
 import time
 import urlparse
 
+from pymongo import errors
 from pymongo import MongoClient
-from pymongo.errors import ConnectionFailure
-from pymongo.errors import InvalidURI
+
+logger = logging.getLogger(__name__)
 
 # TODO:
 # Depends on how we want to calculate the time to
@@ -42,8 +44,9 @@ class Api(object):
         try:
             client = MongoClient(mongodb_uri)
             self.db = client.okapi
-        except (ConnectionFailure, InvalidURI):
+        except (errors.ConnectionFailure, errors.InvalidURI):
             self.db = None
+            logger.error('Unable to connect to MongoDB at %s', mongodb_uri)
 
     def request(self, method, url, **kwargs):
         """calls a method of request library while storing info about api call into mongo db"""
@@ -58,21 +61,25 @@ class Api(object):
             if not res.ok:
                 content = res.content
 
-                date = datetime.datetime.utcnow()
-                host = urlparse.urlparse(res.url)
+            date = datetime.datetime.utcnow()
+            host = urlparse.urlparse(res.url)
 
-                data = {'content': content,
-                        'date': date,
-                        'host': host.hostname,
-                        'method': method,
-                        'project_name': self.project_name,
-                        'response_time': (end - start),
-                        'status_code': res.status_code,
-                        'url': res.url,
-                    }
+            data = {'content': content,
+                    'date': date,
+                    'host': host.hostname,
+                    'method': method,
+                    'project_name': self.project_name,
+                    'response_time': (end - start),
+                    'status_code': res.status_code,
+                    'url': res.url,
+            }
 
+            try:
                 datas = self.db.datas
                 datas.insert(data)
+            except errors.AutoReconnect:
+                logger.error('Unable to connect to MongoDB '
+                             'while trying to log a request')
 
         return res
 
