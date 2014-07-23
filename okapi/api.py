@@ -19,6 +19,7 @@ import urlparse
 
 from pymongo import MongoClient
 from pymongo.errors import ConnectionFailure
+from pymongo.errors import InvalidURI
 
 # TODO:
 # Depends on how we want to calculate the time to
@@ -30,16 +31,18 @@ from pymongo.errors import ConnectionFailure
 
 class Api(object):
 
-    def __init__(self, project_name, host, port):
-        """ initialization of class api"""
-        self.host = host
-        self.port = port
+    def __init__(self, project_name, mongodb_uri='mongodb://localhost'):
+        """Initialization of class api.
+
+        See http://docs.mongodb.org/manual/reference/connection-string/ for
+        more information about the mongodb_uri parameter.
+        """
         self.project_name = project_name
 
         try:
-            client = MongoClient(self.host, self.port)
+            client = MongoClient(mongodb_uri)
             self.db = client.okapi
-        except ConnectionFailure:
+        except (ConnectionFailure, InvalidURI):
             self.db = None
 
     def request(self, method, url, **kwargs):
