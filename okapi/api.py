@@ -50,19 +50,27 @@ class Api(object):
 
     def request(self, method, url, **kwargs):
         """calls a method of request library while storing info about api call into mongo db"""
+        content = ''
+        status_code = None
         start = time.clock()
-        res = requests.request(method, url, **kwargs)
-        end = time.clock()
+        try:
+            res = requests.request(method, url, **kwargs)
+            status_code = res.status_code
+            if not res.ok:
+                content = res.content
+        except requests.exceptions.ConnectionError:
+            content = 'Connection error'
+        except requests.exceptions.HTTPError:
+            content = 'HTTP error'
+        except requests.exceptions.Timeout:
+            content = 'Timeout'
+        finally:
+            end = time.clock()
 
         if self.db is not None:
 
-            content = ''
-
-            if not res.ok:
-                content = res.content
-
             date = datetime.datetime.utcnow()
-            host = urlparse.urlparse(res.url)
+            host = urlparse.urlparse(url)
 
             data = {'content': content,
                     'date': date,
@@ -70,8 +78,8 @@ class Api(object):
                     'method': method,
                     'project_name': self.project_name,
                     'response_time': (end - start),
-                    'status_code': res.status_code,
-                    'url': res.url,
+                    'status_code': status_code,
+                    'url': url,
             }
 
             try:
