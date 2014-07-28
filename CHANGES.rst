@@ -1,5 +1,5 @@
-0.6.1 (2014-06-24)
+0.7 (2014-07-28)
 ----------------
-- Bugs fixes:
+- New Features:
 
-  - installation fix
+	-Make okapi more robust. This way, if the DB is not available, the application using okapi will not fail, it will simply stop logging request stats.
