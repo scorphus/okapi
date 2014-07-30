@@ -81,18 +81,18 @@ class Api(object):
             status_code = res.status_code
             if not res.ok:
                 content = res.content
-            self._save_request(method, url, content, status_code, start)
+            self._save_request(method, url, status_code, content, start)
         except requests.exceptions.ConnectionError:
             content = 'Connection error'
-            self._save_request(method, url, content, status_code, start)
+            self._save_request(method, url, status_code, content, start)
             raise
         except requests.exceptions.HTTPError:
             content = 'HTTP error'
-            self._save_request(method, url, content, status_code, start)
+            self._save_request(method, url, status_code, content, start)
             raise
         except requests.exceptions.Timeout:
             content = 'Timeout'
-            self._save_request(method, url, content, status_code, start)
+            self._save_request(method, url, status_code, content, start)
             raise
 
         return res
