@@ -48,25 +48,7 @@ class Api(object):
             self.db = None
             logger.error('Unable to connect to MongoDB at %s', mongodb_uri)
 
-    def request(self, method, url, **kwargs):
-        """calls a method of request library while storing info about api call into mongo db"""
-        content = ''
-        status_code = None
-        start = time.clock()
-        try:
-            res = requests.request(method, url, **kwargs)
-            status_code = res.status_code
-            if not res.ok:
-                content = res.content
-        except requests.exceptions.ConnectionError:
-            content = 'Connection error'
-        except requests.exceptions.HTTPError:
-            content = 'HTTP error'
-        except requests.exceptions.Timeout:
-            content = 'Timeout'
-        finally:
-            end = time.clock()
-
+    def _save_request(self, method, url, status_code, content, start):
         if self.db is not None:
 
             date = datetime.datetime.utcnow()
@@ -77,7 +59,7 @@ class Api(object):
                     'host': host.hostname,
                     'method': method,
                     'project_name': self.project_name,
-                    'response_time': (end - start),
+                    'response_time': time.clock() - start,
                     'status_code': status_code,
                     'url': url,
             }
@@ -88,6 +70,30 @@ class Api(object):
             except errors.AutoReconnect:
                 logger.error('Unable to connect to MongoDB '
                              'while trying to log a request')
+
+    def request(self, method, url, **kwargs):
+        """calls a method of request library while storing info about api call into mongo db"""
+        content = ''
+        status_code = None
+        start = time.clock()
+        try:
+            res = requests.request(method, url, **kwargs)
+            status_code = res.status_code
+            if not res.ok:
+                content = res.content
+            self._save_request(method, url, status_code, content, start)
+        except requests.exceptions.ConnectionError:
+            content = 'Connection error'
+            self._save_request(method, url, status_code, content, start)
+            raise
+        except requests.exceptions.HTTPError:
+            content = 'HTTP error'
+            self._save_request(method, url, status_code, content, start)
+            raise
+        except requests.exceptions.Timeout:
+            content = 'Timeout'
+            self._save_request(method, url, status_code, content, start)
+            raise
 
         return res
 
