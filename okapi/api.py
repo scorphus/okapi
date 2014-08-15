@@ -68,7 +68,7 @@ class Api(object):
                 datas = self.db.datas
                 datas.insert(data)
             except:
-                logger.exception('Unable to connect to MongoDB')
+                logger.exception('Error writing to MongoDB.')
 
     def request(self, method, url, **kwargs):
         """calls a method of request library while storing info about api call into mongo db"""
