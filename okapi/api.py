@@ -42,7 +42,7 @@ class Api(object):
         self.project_name = project_name
 
         try:
-            client = MongoClient(mongodb_uri)
+            client = MongoClient(mongodb_uri, connectTimeoutMS=5000)
             self.db = client.okapi
         except (errors.ConnectionFailure, errors.InvalidURI):
             self.db = None
@@ -67,9 +67,8 @@ class Api(object):
             try:
                 datas = self.db.datas
                 datas.insert(data)
-            except errors.AutoReconnect:
-                logger.error('Unable to connect to MongoDB '
-                             'while trying to log a request')
+            except:
+                logger.exception('Unable to connect to MongoDB')
 
     def request(self, method, url, **kwargs):
         """calls a method of request library while storing info about api call into mongo db"""
