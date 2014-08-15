@@ -33,7 +33,7 @@ logger = logging.getLogger(__name__)
 
 class Api(object):
 
-    def __init__(self, project_name, mongodb_uri='mongodb://localhost'):
+    def __init__(self, project_name, mongodb_uri='mongodb://localhost', connectTimeoutMS=5000):
         """Initialization of class api.
 
         See http://docs.mongodb.org/manual/reference/connection-string/ for
@@ -42,7 +42,7 @@ class Api(object):
         self.project_name = project_name
 
         try:
-            client = MongoClient(mongodb_uri, connectTimeoutMS=5000)
+            client = MongoClient(mongodb_uri, connectTimeoutMS)
             self.db = client.okapi
         except (errors.ConnectionFailure, errors.InvalidURI):
             self.db = None
