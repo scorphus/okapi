@@ -66,7 +66,8 @@ class Api(object):
 
             try:
                 datas = self.db.datas
-                datas.insert(data)
+                # the w parameter is making the insertion to db asynchronous
+                datas.insert(data, w=0)
             except:
                 logger.exception('Error writing to MongoDB.')
 
