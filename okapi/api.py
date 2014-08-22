@@ -59,7 +59,7 @@ class Api(object):
                     'host': host.hostname,
                     'method': method,
                     'project_name': self.project_name,
-                    'response_time': time.clock() - start,
+                    'response_time': time.time() - start,
                     'status_code': status_code,
                     'url': url,
             }
@@ -75,7 +75,7 @@ class Api(object):
         """calls a method of request library while storing info about api call into mongo db"""
         content = ''
         status_code = None
-        start = time.clock()
+        start = time.time()
         try:
             res = requests.request(method, url, **kwargs)
             status_code = res.status_code
