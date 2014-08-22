@@ -23,14 +23,6 @@ from pymongo import MongoClient
 
 logger = logging.getLogger(__name__)
 
-# TODO:
-# Depends on how we want to calculate the time to
-# receieve the request form Home Depots API.
-# There are several choices.
-# Time.time, Time.clock, and a class from request called elapsed
-# I have a test file that makes it seem that time.clock is fastest but is it most accurate?!?
-# I have used time.clock for now
-
 class Api(object):
 
     def __init__(self, project_name, mongodb_uri='mongodb://localhost', connect_timeout_ms=5000):
@@ -59,7 +51,7 @@ class Api(object):
                     'host': host.hostname,
                     'method': method,
                     'project_name': self.project_name,
-                    'response_time': time.clock() - start,
+                    'response_time': time.time() - start,
                     'status_code': status_code,
                     'url': url,
             }
@@ -75,7 +67,7 @@ class Api(object):
         """calls a method of request library while storing info about api call into mongo db"""
         content = ''
         status_code = None
-        start = time.clock()
+        start = time.time()
         try:
             res = requests.request(method, url, **kwargs)
             status_code = res.status_code
