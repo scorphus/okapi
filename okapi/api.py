@@ -23,6 +23,7 @@ from pymongo import MongoClient
 
 logger = logging.getLogger(__name__)
 
+
 class Api(object):
 
     def __init__(self, project_name, mongodb_uri='mongodb://localhost', connect_timeout_ms=5000):
@@ -46,14 +47,15 @@ class Api(object):
             date = datetime.datetime.utcnow()
             host = urlparse.urlparse(url)
 
-            data = {'content': content,
-                    'date': date,
-                    'host': host.hostname,
-                    'method': method,
-                    'project_name': self.project_name,
-                    'response_time': time.time() - start,
-                    'status_code': status_code,
-                    'url': url,
+            data = {
+                'content': content,
+                'date': date,
+                'host': host.hostname,
+                'method': method,
+                'project_name': self.project_name,
+                'response_time': time.time() - start,
+                'status_code': status_code,
+                'url': url,
             }
 
             try:
