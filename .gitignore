@@ -52,3 +52,8 @@ coverage.xml
 # Sphinx documentation
 docs/_build/
 
+# Mac OS files, editor files and timemachine files
+.DS_Store
+.idea
+._*
+
