@@ -25,8 +25,9 @@ logger = logging.getLogger(__name__)
 
 
 class Api(object):
+    TIMEOUT = 5000
 
-    def __init__(self, project_name, mongodb_uri='mongodb://localhost', connect_timeout_ms=5000):
+    def __init__(self, project_name, mongodb_uri='mongodb://localhost', connect_timeout_ms=TIMEOUT):
         """Initialization of class api.
 
         See http://docs.mongodb.org/manual/reference/connection-string/ for
@@ -52,16 +53,15 @@ class Api(object):
                 'date': date,
                 'host': host.hostname,
                 'method': method,
-                'project_name': self.project_name,
                 'response_time': time.time() - start,
                 'status_code': status_code,
                 'url': url,
             }
-
             try:
-                datas = self.db.datas
+                # As Google Docs optimization #1 (One collection per project)
+                collection = self.db[self.project_name]
                 # the w parameter is making the insertion to db asynchronous
-                datas.insert(data, w=0)
+                collection.insert(data, w=0)
             except:
                 logger.exception('Error writing to MongoDB.')
 
