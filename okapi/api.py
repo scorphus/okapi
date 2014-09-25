@@ -23,9 +23,11 @@ from pymongo import MongoClient
 
 logger = logging.getLogger(__name__)
 
-class Api(object):
 
-    def __init__(self, project_name, mongodb_uri='mongodb://localhost', connect_timeout_ms=5000):
+class Api(object):
+    TIMEOUT = 5000
+
+    def __init__(self, project_name, mongodb_uri='mongodb://localhost', connect_timeout_ms=TIMEOUT):
         """Initialization of class api.
 
         See http://docs.mongodb.org/manual/reference/connection-string/ for
@@ -45,23 +47,33 @@ class Api(object):
 
             date = datetime.datetime.utcnow()
             host = urlparse.urlparse(url)
+            hour = format(date.time().hour, '02')
+            minute = format(date.time().minute, '02')
 
-            data = {'content': content,
-                    'date': date,
-                    'host': host.hostname,
-                    'method': method,
-                    'project_name': self.project_name,
-                    'response_time': time.time() - start,
-                    'status_code': status_code,
-                    'url': url,
+            time_bucket = [
+                "{} {}:{}-minute".format(date.date(), hour, minute),
+                "{} {}-hour".format(date.date(), hour),
+                "{}-day".format(date.date()),
+            ]
+
+            data = {
+                'content': content,
+                'date': date,
+                'host': host.hostname,
+                'method': method,
+                'response_time': time.time() - start,
+                'status_code': status_code,
+                'url': url,
+                'time_bucket': time_bucket,
             }
 
             try:
-                datas = self.db.datas
+                # As Google Docs optimization #3 (Lose resolution)
+                collection = self.db["{}_raw".format(self.project_name)]
                 # the w parameter is making the insertion to db asynchronous
-                datas.insert(data, w=0)
+                collection.insert(data, w=0)
             except:
-                logger.exception('Error writing to MongoDB.')
+                logger.exception('Error writing to MongoDB')
 
     def request(self, method, url, **kwargs):
         """calls a method of request library while storing info about api call into mongo db"""
