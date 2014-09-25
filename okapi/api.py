@@ -48,13 +48,11 @@ class Api(object):
 
             date = datetime.datetime.utcnow()
             host = urlparse.urlparse(url)
-            hour = format(date.time().hour, '02')
-            minute = format(date.time().minute, '02')
 
             time_bucket = [
-                "{} {}:{}-minute".format(date.date(), hour, minute),
-                "{} {}-hour".format(date.date(), hour),
-                "{}-day".format(date.date()),
+                date.strftime('%Y-%m-%d %H:%M-minute'),
+                date.strftime('%Y-%m-%d %H-hour'),
+                date.strftime('%Y-%m-%d-day'),
             ]
 
             data = {
@@ -69,7 +67,7 @@ class Api(object):
             }
 
             try:
-                # As Google Docs optimization #3 (Lose resolution)
+                # Optimization in order to improve speed: losing resolution in time
                 collection = self.db["{}_raw".format(self.project_name)]
                 # the w parameter is making the insertion to db asynchronous
                 collection.insert(data, w=0)
