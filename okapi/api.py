@@ -25,9 +25,10 @@ logger = logging.getLogger(__name__)
 
 
 class Api(object):
-    TIMEOUT = 5000
+    DEFAULT_TIMEOUT = 5000
+    DEFAULT_MONGO_URI = 'mongodb://localhost'
 
-    def __init__(self, project_name, mongodb_uri='mongodb://localhost', connect_timeout_ms=TIMEOUT):
+    def __init__(self, project_name, mongodb_uri=DEFAULT_MONGO_URI, connect_timeout_ms=DEFAULT_TIMEOUT):
         """Initialization of class api.
 
         See http://docs.mongodb.org/manual/reference/connection-string/ for
