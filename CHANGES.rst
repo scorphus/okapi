@@ -1,3 +1,9 @@
+0.8.1 (unreleased)
+------------------
+- New Features:
+
+  - Decouple okapi from requests so that any library following requests interface can be used
+
 0.8.0 (2014-09-26)
 ------------------
 - New features:
