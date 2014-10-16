@@ -22,6 +22,7 @@ from pymongo import MongoClient
 
 logger = logging.getLogger(__name__)
 
+
 class Api(object):
     DEFAULT_TIMEOUT = 5000
     DEFAULT_MONGO_URI = 'mongodb://localhost'
@@ -85,15 +86,15 @@ class Api(object):
             if not res.ok:
                 content = res.content
             self._save_request(method, url, status_code, content, start)
-        except self.requests_lib.exceptions.ConnectionError:
+        except self.exceptions.ConnectionError:
             content = 'Connection error'
             self._save_request(method, url, status_code, content, start)
             raise
-        except self.requests_lib.exceptions.HTTPError:
+        except self.exceptions.HTTPError:
             content = 'HTTP error'
             self._save_request(method, url, status_code, content, start)
             raise
-        except self.requests_lib.exceptions.Timeout:
+        except self.exceptions.Timeout:
             content = 'Timeout'
             self._save_request(method, url, status_code, content, start)
             raise
