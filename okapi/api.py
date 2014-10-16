@@ -80,7 +80,7 @@ class Api(object):
         status_code = None
         start = time.time()
         try:
-            res = requests_lib.request(method, url, **kwargs)
+            res = self.requests_lib.request(method, url, **kwargs)
             status_code = res.status_code
             if not res.ok:
                 content = res.content
