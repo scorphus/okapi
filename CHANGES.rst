@@ -1,8 +1,11 @@
-0.8.1 (unreleased)
-------------------
+0.9.0 (2014-10-16)
+-----------------
 - New Features:
 
-  - Decouple okapi from requests so that any library following requests interface can be used
+  - Decouple okapi from requests so that any library following requests 
+    interface can be used. This introduces a backward incompatible change
+    because now the __init__ method for okapi Api class requires a new
+    argument
 
 0.8.0 (2014-09-26)
 ------------------
