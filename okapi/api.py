@@ -14,7 +14,6 @@ This module implements the Requests API while storing valuable information into 
 
 import datetime
 import logging
-import requests
 import time
 import urlparse
 
@@ -23,18 +22,19 @@ from pymongo import MongoClient
 
 logger = logging.getLogger(__name__)
 
-
 class Api(object):
     DEFAULT_TIMEOUT = 5000
     DEFAULT_MONGO_URI = 'mongodb://localhost'
 
-    def __init__(self, project_name, mongodb_uri=DEFAULT_MONGO_URI, connect_timeout_ms=DEFAULT_TIMEOUT):
+    def __init__(self, project_name, requests_lib, mongodb_uri=DEFAULT_MONGO_URI, connect_timeout_ms=DEFAULT_TIMEOUT):
         """Initialization of class api.
 
         See http://docs.mongodb.org/manual/reference/connection-string/ for
         more information about the mongodb_uri parameter.
         """
         self.project_name = project_name
+        self.requests_lib = requests_lib
+        self.exceptions = requests_lib.exceptions
 
         try:
             client = MongoClient(mongodb_uri, connectTimeoutMS=connect_timeout_ms)
@@ -80,20 +80,20 @@ class Api(object):
         status_code = None
         start = time.time()
         try:
-            res = requests.request(method, url, **kwargs)
+            res = requests_lib.request(method, url, **kwargs)
             status_code = res.status_code
             if not res.ok:
                 content = res.content
             self._save_request(method, url, status_code, content, start)
-        except requests.exceptions.ConnectionError:
+        except self.requests_lib.exceptions.ConnectionError:
             content = 'Connection error'
             self._save_request(method, url, status_code, content, start)
             raise
-        except requests.exceptions.HTTPError:
+        except self.requests_lib.exceptions.HTTPError:
             content = 'HTTP error'
             self._save_request(method, url, status_code, content, start)
             raise
-        except requests.exceptions.Timeout:
+        except self.requests_lib.exceptions.Timeout:
             content = 'Timeout'
             self._save_request(method, url, status_code, content, start)
             raise
