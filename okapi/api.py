@@ -39,10 +39,14 @@ class Api(object):
 
         try:
             client = MongoClient(mongodb_uri, connectTimeoutMS=connect_timeout_ms)
-            self.db = client.okapi
+            self.db = client.get_default_database()
         except (errors.ConnectionFailure, errors.InvalidURI):
             self.db = None
             logger.error('Unable to connect to MongoDB at %s', mongodb_uri)
+        except errors.ConfigurationError:
+            self.db = None
+            logger.error('Auth failed when connnecting to MongoDB at %s',
+                         mongodb_uri)
 
     def _save_request(self, method, url, status_code, content, start):
         if self.db is not None:

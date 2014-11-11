@@ -1,5 +1,12 @@
+0.10.0 (unreleased)
+-------------------
+- New Features:
+
+  - Don't hardcode the name of the database but expect it to be in
+    the mongodb_uri parameter.
+
 0.9.0 (2014-10-16)
------------------
+------------------
 - New Features:
 
   - Decouple okapi from requests so that any library following requests 
