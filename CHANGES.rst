@@ -1,3 +1,9 @@
+0.11.0 (2014-12-29)
+-------------------
+- New Features:
+
+  - Changed blank space to a T letter as field separator in time-bucket fields.
+
 0.10.0 (2014-11-11)
 -------------------
 - New Features:
