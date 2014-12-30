@@ -1,3 +1,11 @@
+0.11.0 (2014-12-29)
+-------------------
+- New Features:
+
+  - Changed blank space to a T letter as indicator of the beginning of the time 
+    element to be more iso-friendly:
+    http://www.ecma-international.org/ecma-262/5.1/#sec-15.9.1.15
+
 0.10.0 (2014-11-11)
 -------------------
 - New Features:

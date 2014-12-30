@@ -55,8 +55,8 @@ class Api(object):
             host = urlparse.urlparse(url)
 
             time_bucket = [
-                date.strftime('%Y-%m-%d %H:%M-minute'),
-                date.strftime('%Y-%m-%d %H-hour'),
+                date.strftime('%Y-%m-%dT%H:%M-minute'),
+                date.strftime('%Y-%m-%dT%H-hour'),
                 date.strftime('%Y-%m-%d-day'),
             ]
 
