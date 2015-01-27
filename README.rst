@@ -40,7 +40,7 @@ Add the following configuration to the project's settings::
 
 Note that if the project is already using *MongoDB*, you shouldn't store Okapi's
 data into the same database. Okapi creates collections dynamically and could
-conflict with your own project's.
+conflict with your the  project's.
 
 
 Initialization
@@ -61,16 +61,14 @@ This way Okapi will be imported at startup time::
 Usage
 -----
 Once initialized you can use Okapi wherever you use ``requests`` library.
-Think in Okapi as if you were using ``requests`` because they both have the same
+Think of Okapi as if you were using ``requests`` because they both have the same
 API.
 
 Requests documentation: http://docs.python-requests.org/en/latest/
 
 
-Extras
-------
-**Activating/deactivating okapi in your project**
-
+Activating/deactivating okapi in your project
+---------------------------------------------
 In the file ``settings/base.py`` under the ``OKAPI CONFIGURATION`` section, you 
 can add a boolean setting in order to enable/disable okapi for your project. It 
 could be interesting to have it enabled in QA or staging environment and when 
