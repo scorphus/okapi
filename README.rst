@@ -82,7 +82,7 @@ deeply tested, activate it also in production.
 
 You can have a section into ``your-project-name/settings/dev.py``: 
 
-.. code.block:: python
+.. code-block:: python
 
     ########## OKAPI CONFIGURATION
     OKAPI_ENABLED = True
@@ -90,7 +90,7 @@ You can have a section into ``your-project-name/settings/dev.py``:
 
 Another one into ``your-project-name/settings/production.py``: 
 
-.. code.block:: python    
+.. code-block:: python    
 
     ########## OKAPI CONFIGURATION
     OKAPI_ENABLED = False
@@ -99,7 +99,7 @@ Another one into ``your-project-name/settings/production.py``:
 And so on. Note that ``get_custom_setting`` is a wrapper around ``getattr``. 
 Then you could initialize it conditionally as shown below:
 
-.. code.block:: python
+.. code-block:: python
 
     http_lib = requests
     if (get_custom_setting('OKAPI_ENABLED') and okapi_uri is not None):
