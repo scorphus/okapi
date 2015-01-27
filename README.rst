@@ -11,14 +11,13 @@ In an existing project you should at least modify the following files:
 --------------------
 Check the existence of the following section under the settings file of your 
 project.
-```python
+
 [okapi]
 name: okapi
 replica: <replica-name>
 host0: <host0-name>
 host1: <host1-name>
-host2: <host2-name>
-```
+host2: <host2-name>::
 
 requirements/base.txt
 ---------------------
