@@ -13,15 +13,17 @@ requirements/base.txt
 ---------------------
 Add the following requirement to the project's settings. It won't be needed to
 add ``requests`` if the project is already using it.
-``requests`` version should be >= 2.2.11::
+``requests`` version should be >= 2.2.11:
 
+.. code-block:: python
     okapi==X.Y.Z
 
 
 settings.py
 -----------
-Add the following configuration to the project's settings::
-    
+Add the following configuration to the project's settings:
+
+.. code-block:: python    
     ########## OKAPI CONFIGURATION
     OKAPI_PROJECT = 'your-project-name'
 
@@ -46,15 +48,16 @@ conflict with your the  project's.
 Initialization
 --------------
 Initialize Okapi in the ``models.py`` file of a basic application of the project.
-This way Okapi will be imported at startup time::
+This way Okapi will be imported at startup time:
 
+.. code-block:: python
     import requests    
     from django.conf import settings    
 
     from okapi.api import Api
 
     project_name = getattr(settings, 'OKAPI_PROJECT')
-    mongodb_uri = getattr(settings, MONGODB_URI')
+    mongodb_uri = getattr(settings, 'MONGODB_URI')
     okapi_client = Api(project_name, requests, mongodb_uri)
 
 
@@ -74,21 +77,24 @@ can add a boolean setting in order to enable/disable okapi for your project. It
 could be interesting to have it enabled in QA or staging environment and when 
 deeply tested, activate it also in production.
 
-You can have a section into ``your-project-name/settings/dev.py``:: 
+You can have a section into ``your-project-name/settings/dev.py``: 
 
+.. code.block:: python
     ########## OKAPI CONFIGURATION
     OKAPI_ENABLED = True
     ########## END OKAPI CONFIGURATION
 
-Another one into ``your-project-name/settings/production.py``:: 
-    
+Another one into ``your-project-name/settings/production.py``: 
+
+.. code.block:: python    
     ########## OKAPI CONFIGURATION
     OKAPI_ENABLED = False
     ########## END OKAPI CONFIGURATION
 
 And so on. Note that ``get_custom_setting`` is a wrapper around ``getattr``. 
-Then you could initialize it conditionally as shown below::
-    
+Then you could initialize it conditionally as shown below:
+
+.. code.block:: python
     http_lib = requests
     if (get_custom_setting('OKAPI_ENABLED') and okapi_uri is not None):
         project_name = get_custom_setting('OKAPI_PROJECT', required=True)
