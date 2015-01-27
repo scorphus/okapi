@@ -58,7 +58,8 @@ This way Okapi will be imported at startup time.
 Usage
 -----
 Once intialized you can use Okapi wherever you use the standard request library.
-Think in Okapi as requests because they both have the same API.
+Think in Okapi as if you were using ``requests`` because they both have the same
+ API.
 
 Requests documentation: http://docs.python-requests.org/en/latest/
 
