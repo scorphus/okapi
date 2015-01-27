@@ -3,37 +3,32 @@ Okapi
 
 Python Library to send API info to Storage Server
 
+
 Okapi setup 
 ===========
 In an existing project you should at least modify the following files:
 
-<your-settings-file>
---------------------
-Check the existence of the following section under the settings file of your 
-project::
-
-    [okapi]
-    name: okapi
-    replica: <replica-name>
-    host0: <host0-name>
-    host1: <host1-name>
-    host2: <host2-name>
 
 requirements/base.txt
 ---------------------
-Add the following requirement line in the proper place (alphabetical order). You 
-won't need to add requests if the project is already using it. Anyway requests 
-version should be, at least **2.2.11** or greater::
+Add the following requirement to the project's settings. It won't be needed to
+add ``requests`` if the project is already using it.
+``requests`` version should be >= 2.2.11::
 
-    okapi==0.11.0
+    okapi==X.Y.Z
 
-settings/base.py
-----------------
-Under the database section of the file we should add::
+
+settings.py
+-----------
+Add the following configuration to the project's settings::
     
+    ########## OKAPI CONFIGURATION
+    OKAPI_PROJECT = 'your-project-name'
+
     OKAPI_URI = None
     if settings.has_section('okapi'):
         OKAPI_URI = 'mongodb://{0},{1},{2}/{3}?replicaSet={4}'.format(
+
             settings.get('okapi', 'host0'),
             settings.get('okapi', 'host1'),
             settings.get('okapi', 'host2'),
@@ -41,27 +36,36 @@ Under the database section of the file we should add::
             settings.get('okapi', 'replica'),
         )
 
-We also should add this new section to the file::
-
-    ########## OKAPI CONFIGURATION
-    OKAPI_PROJECT = 'your-project-name'
     ########## END OKAPI CONFIGURATION
 
-Note that if the project is already using *MongoDB*, we shouldn't store Okapi's
-data into the same database.
+Note that if the project is already using *MongoDB*, you shouldn't store Okapi's
+data into the same database. Okapi creates collections dynamically and could
+conflict with your own project's.
+
 
 Initialization
 --------------
-Intialize Okapi in the ``models.py`` file of a basic application of the project.
-This way Okapi will be imported at startup time.
+Initialize Okapi in the ``models.py`` file of a basic application of the project.
+This way Okapi will be imported at startup time::
+
+    import requests    
+    from django.conf import settings    
+
+    from okapi.api import Api
+
+    project_name = getattr(settings, 'OKAPI_PROJECT')
+    mongodb_uri = getattr(settings, MONGODB_URI')
+    okapi_client = Api(project_name, requests, mongodb_uri)
+
 
 Usage
 -----
-Once intialized you can use Okapi wherever you use the standard request library.
+Once initialized you can use Okapi wherever you use ``requests`` library.
 Think in Okapi as if you were using ``requests`` because they both have the same
 API.
 
 Requests documentation: http://docs.python-requests.org/en/latest/
+
 
 Extras
 ------
@@ -69,8 +73,8 @@ Extras
 
 In the file ``settings/base.py`` under the ``OKAPI CONFIGURATION`` section, you 
 can add a boolean setting in order to enable/disable okapi for your project. It 
-could be interesting to have it enabled in a pubdev or staging environment and 
-when deeply tested, activate it also in production.
+could be interesting to have it enabled in QA or staging environment and when 
+deeply tested, activate it also in production.
 
 You can have a section into ``your-project-name/settings/dev.py``:: 
 
@@ -84,7 +88,8 @@ Another one into ``your-project-name/settings/production.py``::
     OKAPI_ENABLED = False
     ########## END OKAPI CONFIGURATION
 
-And so on. Then you could initialize it conditionally as shown below::
+And so on. Note that ``get_custom_setting`` is a wrapper around ``getattr``. 
+Then you could initialize it conditionally as shown below::
     
     http_lib = requests
     if (get_custom_setting('OKAPI_ENABLED') and okapi_uri is not None):
