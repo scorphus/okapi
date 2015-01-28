@@ -77,8 +77,8 @@ Activating/deactivating okapi in your project
 ---------------------------------------------
 In the file ``settings/base.py`` under the ``OKAPI CONFIGURATION`` section, you 
 can add a boolean setting in order to enable/disable okapi for your project. It 
-could be interesting to have it enabled in QA or staging environment and when 
-deeply tested, activate it also in production.
+could be interesting to have it enabled in QA or staging environment and after
+it has been properly tested, activate it also in production.
 
 You can have a section into ``your-project-name/settings/dev.py``: 
 
