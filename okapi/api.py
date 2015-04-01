@@ -27,26 +27,19 @@ class Api(object):
     DEFAULT_TIMEOUT = 5000
     DEFAULT_MONGO_URI = 'mongodb://localhost'
 
-    def __init__(self, project_name, requests_lib, mongodb_uri=DEFAULT_MONGO_URI, connect_timeout_ms=DEFAULT_TIMEOUT):
+    def __init__(self, db, project_name, requests_lib):
         """Initialization of class api.
 
-        See http://docs.mongodb.org/manual/reference/connection-string/ for
-        more information about the mongodb_uri parameter.
+        __init__ requires the following parameters:
+        db --  For this value, get the mongo client from the get_mongodb_client
+        method. Then set the database name on it.
+        project_name -- name of the mongodb collection
+        requests_lib -- library which should be used to make requests
         """
+        self.db = db
         self.project_name = project_name
         self.requests_lib = requests_lib
         self.exceptions = requests_lib.exceptions
-
-        try:
-            client = MongoClient(mongodb_uri, connectTimeoutMS=connect_timeout_ms)
-            self.db = client.get_default_database()
-        except (errors.ConnectionFailure, errors.InvalidURI):
-            self.db = None
-            logger.error('Unable to connect to MongoDB at %s', mongodb_uri)
-        except errors.ConfigurationError:
-            self.db = None
-            logger.error('Auth failed when connnecting to MongoDB at %s',
-                         mongodb_uri)
 
     def _save_request(self, method, url, status_code, content, start):
         if self.db is not None:
@@ -116,3 +109,27 @@ class Api(object):
 
     def put(self, url, **kwargs):
         return self.request('PUT', url, **kwargs)
+
+
+def get_mongodb_client(mongodb_uri=Api.DEFAULT_MONGO_URI,
+                       connect_timeout_ms=Api.DEFAULT_TIMEOUT):
+    """Returns a mongodb client
+
+    This method should ideally be called only once. The value returned should
+    then be passed to whichever method needs a db connection.
+
+    See http://docs.mongodb.org/manual/reference/connection-string/ for
+    more information about the mongodb_uri parameter.
+    """
+    client = None
+    try:
+        client = MongoClient(mongodb_uri, connectTimeoutMS=connect_timeout_ms)
+    except (errors.ConnectionFailure, errors.InvalidURI) as e:
+        logger.exception('Unable to connect to MongoDB at %s, error_code: %s',
+                         mongodb_uri, e)
+    except errors.ConfigurationError as e:
+        logger.exception(
+            'Auth failed when connnecting to MongoDB at %s, error_code: %s',
+            mongodb_uri, e
+        )
+    return client
