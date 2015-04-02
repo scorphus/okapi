@@ -31,8 +31,9 @@ class Api(object):
         """Initialization of class api.
 
         __init__ requires the following parameters:
-        db --  For this value, get the mongo client from the get_mongodb_client
-        method. Then set the database name on it.
+        db --  Mongo database object. Use the get_mongodb_client method to get a
+        mongo client object. Then set the database name on it to create a
+        database object.
         project_name -- name of the mongodb collection
         requests_lib -- library which should be used to make requests
         """
