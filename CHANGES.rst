@@ -1,3 +1,18 @@
+0.12.0 (2015-04-01)
+-------------------
+- New Features:
+
+  - Method `get_mongodb_client` to get a MongoDB connection client.
+
+- Bugfixes:
+
+  - None
+
+- Incompatible changes:
+
+  - `Okapi.__init__` has changed to have a new mandatory `db` parameter.
+   Parameters `mongodb_uri` and `connect_timeout_ms` have been removed.
+
 0.11.0 (2014-12-29)
 -------------------
 - New Features:
