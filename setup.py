@@ -22,9 +22,11 @@ setup(
     version=__version__,
     author='RedBeacon (Gobind Ball)',
     author_email='support@redbeacon.com',
-    description=README + '\n\n' + CHANGES,
+    description='Requests wrapper to instrument HTTP calls',
+    long_description=README + '\n\n' + CHANGES,
+    url='https://github.com/redbeacon/okapi',
     packages=find_packages(),
-    data_files=[('config',['setup.cfg'])],
+    data_files=[('config', ['setup.cfg'])],
     classifiers=[
         'Development Status :: 3 - Alpha',
         'Intended Audience :: Developers',
@@ -32,7 +34,7 @@ setup(
         'Programming Language :: Python',
     ],
     zip_safe=False,
-    install_requires = [
+    install_requires=[
         'pymongo',
         'requests',
     ],

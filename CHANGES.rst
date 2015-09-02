@@ -1,3 +1,13 @@
+Unreleased (no-date-yet)
+-------------------
+- New Features:
+
+  - None
+
+- Bugfixes:
+
+  - Change setup() call in `setup.py` to improve package page on PyPI.
+
 0.12.0 (2015-04-01)
 -------------------
 - New Features:
